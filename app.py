@@ -181,7 +181,7 @@ def main() -> None:
 
     col_a, col_b = st.columns(2)
     with col_a:
-        st.image(upload_puzzle.cropped, caption="Upload", use_container_width=True)
+        st.image(upload_puzzle.cropped, caption="Upload", width="stretch")
     with col_b:
         st.image(detected_grid, caption="Detected", width=320)
 
@@ -241,7 +241,7 @@ def main() -> None:
             grid_img = _render_grid(tiles, labels, highlight=highlight)
             caption = f"Step {step_index}" if move is not None else "Done"
             with cols[offset]:
-                st.image(grid_img, caption=caption, use_container_width=True)
+                st.image(grid_img, caption=caption, width="stretch")
 
 
 if __name__ == "__main__":
