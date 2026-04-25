@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>paste-listener</title>
+  </head>
+  <body>
+    <script>
+      (function () {
+        function send(type, extra) {
+          var msg = Object.assign(
+            { isStreamlitMessage: true, type: type },
+            extra || {}
+          );
+          window.parent.postMessage(msg, "*");
+        }
+
+        send("streamlit:componentReady", { apiVersion: 1 });
+        send("streamlit:setFrameHeight", { height: 0 });
+
+        function handlePaste(e) {
+          var clipboard = e.clipboardData || window.clipboardData;
+          if (!clipboard || !clipboard.items) return;
+          for (var i = 0; i < clipboard.items.length; i++) {
+            var item = clipboard.items[i];
+            if (item.kind === "file" && item.type.indexOf("image") !== -1) {
+              var blob = item.getAsFile();
+              if (!blob) return;
+              var reader = new FileReader();
+              reader.onload = function (ev) {
+                send("streamlit:setComponentValue", {
+                  value: { url: ev.target.result, ts: Date.now() },
+                  dataType: "json",
+                });
+              };
+              reader.readAsDataURL(blob);
+              e.preventDefault();
+              return;
+            }
+          }
+        }
+
+        var docs = [];
+        try {
+          docs.push(window.parent.document);
+        } catch (err) {}
+        docs.push(document);
+
+        docs.forEach(function (d) {
+          d.addEventListener("paste", handlePaste, true);
+        });
+      })();
+    </script>
+  </body>
+</html>
