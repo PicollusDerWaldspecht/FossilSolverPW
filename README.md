@@ -5,7 +5,6 @@ and get the optimal sequence of moves with the tile to click highlighted
 on every step.
 
 ## Install
-
 ```bash
 pip install -r requirements.txt
 ```
@@ -13,6 +12,7 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
+.\.venv\Scripts\Activate.ps1
 streamlit run app.py
 ```
 
